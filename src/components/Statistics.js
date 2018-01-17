@@ -39,7 +39,7 @@ const Statistics = ({stats}) => {
               <tr>
                 <td> exercises average: &nbsp;  &nbsp;</td>
                 <td>{exercises(stats[p])}</td>
-              </tr>                       
+              </tr>                                          
             </tbody>
           </table>
         </div>      

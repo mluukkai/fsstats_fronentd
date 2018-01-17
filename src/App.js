@@ -184,12 +184,13 @@ class App extends React.Component {
           </div>
         )} />
 
-        <Route exact path="/submissions" render={() => <Submissions /> } />
+        <Route exact path="/submissions" render={({history}) => 
+          <Submissions history={history}/> }
+        />
 
         <Route path="/solutions/:id" render={({match}) => 
           <Solutions id={match.params.id} />}
         />
-
 
         <Login
           handleClose={this.handleClose}

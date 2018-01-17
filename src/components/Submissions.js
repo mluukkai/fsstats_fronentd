@@ -1,9 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Table } from 'semantic-ui-react'
+import { Table, Button } from 'semantic-ui-react'
 import SubmissionForm from './SubmissionForm'
 
 class Submissions extends React.Component {
+
+  showModelSolutuions = (part) => () => {
+    this.props.history.push(`solutions/${part}`)
+  }
 
   render() {
 
@@ -17,6 +21,18 @@ class Submissions extends React.Component {
 
     const byPart = (p1, p2) => p1.week-p2.week
 
+    const solutions = (part) => {
+      if ( part<2) {
+        return <div>not available yet</div>
+      }
+      return(
+        <Button onClick={this.showModelSolutuions(part)}>
+          show
+        </Button>
+      )
+
+    }
+    
     return (
       <div>
         <h3>My submissions</h3>
@@ -28,7 +44,8 @@ class Submissions extends React.Component {
               <Table.HeaderCell>exercises</Table.HeaderCell>
               <Table.HeaderCell>hours</Table.HeaderCell>
               <Table.HeaderCell>github</Table.HeaderCell>
-              <Table.HeaderCell>comment</Table.HeaderCell>     
+              <Table.HeaderCell>comment</Table.HeaderCell>  
+              <Table.HeaderCell>solutions</Table.HeaderCell>    
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -39,6 +56,9 @@ class Submissions extends React.Component {
                 <Table.Cell>{s.time}</Table.Cell>
                 <Table.Cell><a href={`${s.github}`}>{s.github}</a></Table.Cell>
                 <Table.Cell>{s.comment}</Table.Cell>
+                <Table.Cell>
+                  {solutions(s.week)}
+                </Table.Cell>
               </Table.Row>)
             )}
 

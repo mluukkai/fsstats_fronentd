@@ -15,19 +15,19 @@ class SubmissionForm extends React.Component {
       hours: '',
       github: 'https://github.com/username/repo',
       comments: '',
-      visible: false
+      visible: true
     }
 
-    for (let i = 1; i <= 200; i++) {
+    for (let i = 1; i <= 40; i++) {
       state[`e${i}`] = false
     }
     this.setState(state)
   }
   
-  markAll(e) {
+  setAllTo = (to) => () => {
     const state = {}
-    for (let i = 1; i <= 200; i++) {
-      state[`e${i}`] = e.target.checked
+    for (let i = 1; i <= 40; i++) {
+      state[`e${i}`] = to
     }
     this.setState(state)
   }
@@ -132,6 +132,10 @@ class SubmissionForm extends React.Component {
     return (
       <div>
         <h3>Create a submission for part {this.props.part}</h3>
+        <p><strong>Mark exercises you have done</strong> &nbsp; &nbsp;
+          <Button size='tiny' onClick={this.setAllTo(true)}>mark all</Button>
+          <Button size='tiny' onClick={this.setAllTo(false)}>clear all</Button>
+        </p>
         <Form onSubmit={this.handleSubmit}>
           {exercises()}
           <Form.Field inline>

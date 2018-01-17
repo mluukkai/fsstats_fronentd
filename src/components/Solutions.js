@@ -1,40 +1,43 @@
 import React from 'react'
 import courseService from '../services/course'
-import { Grid, Message } from 'semantic-ui-react'
+import { Grid, Message, List } from 'semantic-ui-react'
+const Highlight = require('react-syntax-highlight')
 
 const File = ({ file, showFile }) => {
   const url = `${BASEURL}/${file.fullName}`
 
   const klik = (file) => (e) => {
     e.preventDefault()
-    console.log('*')
-    showFile(file)
-  }
 
-  const style = {
-    borderStyle: 'solid',
-    borderWidth: 1
+    showFile(file)
   }
 
   if (file.type === 'file') {
     return (
-      <li style={style} onClick={klik(file)}>
-        {file.name}
-      </li>
+      <List.Item onClick={klik(file)}>
+        <List.Icon name='file' />
+        <List.Content>
+        <List.Description>{file.name}</List.Description>
+        </List.Content>
+      </List.Item>  
     )
   }
   return (
-    <li><em>{file.name}</em>
-      <ul>
-        {file.files.map(file => 
-          <File
-            key={file.fullName}
-            file={file}
-            showFile={showFile}
-          />
-        )}
-      </ul>
-    </li>
+    <List.Item>
+      <List.Icon name='folder' />
+      <List.Content>
+        <List.Description>{file.name}</List.Description>
+        <List>
+          {file.files.map(file => 
+            <File
+              key={file.fullName}
+              file={file}
+              showFile={showFile}
+            />
+          )}
+        </List>
+      </List.Content>
+    </List.Item>
   )
 }
 
@@ -92,36 +95,28 @@ class Solutions extends React.Component {
       }
 
       return (
-        <div>
-          <pre>
-            {this.state.data}
-          </pre>
-        </div>
+        <pre>
+          {this.state.data}
+        </pre>
       )
     }
 
     return (
       <div>
         <h2>Example solutions part {this.props.id}</h2>
-        <ul>
-          {this.state.files.map(file => <File
-            key={file.fullName}
-            file={file}
-            showFile={this.showFile}
-          />)}
-        </ul>
-        <Grid columns={5}>
+        <Grid columns={4}>
           <Grid.Column widht={1}>
-            <ul>
-              {this.state.files.map(file => <File
-                key={file.fullName}
-                file={file}
-                showFile={this.showFile}
-              />)}
-            </ul>
+            <List>
+              {this.state.files.map(file => 
+                <File
+                  key={file.fullName}
+                  file={file}
+                  showFile={this.showFile}
+                />
+              )}
+            </List>
           </Grid.Column>
-          <Grid.Column widht={1}>
-          </Grid.Column> 
+
           <Grid.Column widht={3}>
             {(this.state.error)&&(
               <Message color='red'>
