@@ -15,7 +15,7 @@ class SubmissionForm extends React.Component {
       hours: '',
       github: 'https://github.com/username/repo',
       comments: '',
-      visible: true
+      visible: false
     }
 
     for (let i = 1; i <= 40; i++) {
