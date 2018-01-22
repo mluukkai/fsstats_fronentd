@@ -1,7 +1,6 @@
 import React from 'react'
 import courseService from '../services/course'
 import { Grid, Message, List } from 'semantic-ui-react'
-const Highlight = require('react-syntax-highlight')
 
 const File = ({ file, showFile }) => {
   const url = `${BASEURL}/${file.fullName}`

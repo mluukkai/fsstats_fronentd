@@ -24,7 +24,7 @@ module.exports = (env) => {
     plugins.push (
       new ExtendedDefinePlugin({
         BASEURL: 'http://localhost:3000', 
-        //BASEURL: 'https://studies.cs.helsinki.fi/fs-stats',
+        BASEURL: 'https://studies.cs.helsinki.fi/fs-stats',
         DEBUG: true,
         BUILD: timestamp,
         USERNAME: 'testertester',

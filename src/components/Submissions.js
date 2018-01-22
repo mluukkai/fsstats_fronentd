@@ -22,7 +22,7 @@ class Submissions extends React.Component {
     const byPart = (p1, p2) => p1.week-p2.week
 
     const solutions = (part) => {
-      if ( part<2) {
+      if ( part===0) {
         return <div>not available yet</div>
       }
       return(
