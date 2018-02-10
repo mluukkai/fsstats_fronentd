@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Table, Button } from 'semantic-ui-react'
 import SubmissionForm from './SubmissionForm'
+const Highlight = require('react-syntax-highlight')
 
 class Submissions extends React.Component {
 
@@ -30,9 +31,12 @@ class Submissions extends React.Component {
           show
         </Button>
       )
-
     }
-    
+    const sum = (s,i) => s+i
+    const exerciseTotal = 
+      this.props.submissions.map(s => s.exercises.length).reduce(sum, 0)
+    const hoursTotal = 
+      this.props.submissions.map(s => s.time).reduce(sum, 0)
     return (
       <div>
         <h3>My submissions</h3>
@@ -61,8 +65,17 @@ class Submissions extends React.Component {
                 </Table.Cell>
               </Table.Row>)
             )}
-
           </Table.Body>
+          <Table.Footer>
+            <Table.Row>
+              <Table.HeaderCell>total</Table.HeaderCell>
+              <Table.HeaderCell>{exerciseTotal}</Table.HeaderCell>
+              <Table.HeaderCell>{hoursTotal}</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
+            </Table.Row>
+          </Table.Footer>
         </Table>
       </div>
     )

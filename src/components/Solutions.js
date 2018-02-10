@@ -1,13 +1,13 @@
 import React from 'react'
-import courseService from '../services/course'
 import { Grid, Message, List } from 'semantic-ui-react'
+import HighLight from 'react-syntax-highlight'
+import courseService from '../services/course'
 
 const File = ({ file, showFile }) => {
   const url = `${BASEURL}/${file.fullName}`
 
   const klik = (file) => (e) => {
     e.preventDefault()
-
     showFile(file)
   }
 
@@ -16,7 +16,7 @@ const File = ({ file, showFile }) => {
       <List.Item onClick={klik(file)}>
         <List.Icon name='file' />
         <List.Content>
-        <List.Description>{file.name}</List.Description>
+          <List.Description>{file.name}</List.Description>
         </List.Content>
       </List.Item>  
     )
@@ -84,49 +84,52 @@ class Solutions extends React.Component {
       }
 
       if (this.state.content.includes('application/json') ) {
-        return(
-          <div>
-            <pre>
-              {JSON.stringify(this.state.data, null, 2)}
-            </pre>
-          </div>
+        return (
+          <HighLight 
+            lang={'json'} 
+            value={JSON.stringify(this.state.data, null, 2)} 
+          />  
         )   
       }
 
+      if (this.state.data === undefined || this.state.data.length===0 ) {
+        return null
+      }
+    
       return (
-        <pre>
-          {this.state.data}
-        </pre>
+        <HighLight lang={'javascript'} value={this.state.data} />
       )
     }
 
     return (
       <div>
         <h2>Example solutions part {this.props.id}</h2>
-        <Grid columns={4}>
-          <Grid.Column widht={1}>
-            <List>
-              {this.state.files.map(file => 
-                <File
-                  key={file.fullName}
-                  file={file}
-                  showFile={this.showFile}
-                />
-              )}
-            </List>
-          </Grid.Column>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <List>
+                {this.state.files.map(file => 
+                  <File
+                    key={file.fullName}
+                    file={file}
+                    showFile={this.showFile}
+                  />
+                )}
+              </List>
+            </Grid.Column>
 
-          <Grid.Column widht={3}>
-            {(this.state.error)&&(
-              <Message color='red'>
-                <Message.Header>
-                  no permissions
-                </Message.Header>
-                <p>{this.state.error}</p>  
-              </Message>)}
-            <h4>{this.state.file &&  this.state.file.fullName}</h4>
-            {show()}
-          </Grid.Column>
+            <Grid.Column width={12}>
+              {(this.state.error)&&(
+                <Message color='red'>
+                  <Message.Header>
+                    no permissions
+                  </Message.Header>
+                  <p>{this.state.error}</p>  
+                </Message>)}
+              <h4>{this.state.file &&  this.state.file.fullName}</h4>
+              {show()}
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
 
       </div>

@@ -180,7 +180,11 @@ const mapStateToProps = (state) => {
     }
   }
   const [max] = state.user.submissions.length>0 ? state.user.submissions.map(s=>s.week).sort((a,b)=>b-a) : [-1]
-  const part = max+1
+  const week = state.course.info.week
+  let part = max+1
+  if (part<week) {
+    part = week
+  }
 
   return {
     exerciseCount: state.course.info.exercises[part],
