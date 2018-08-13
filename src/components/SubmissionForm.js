@@ -70,7 +70,7 @@ class SubmissionForm extends React.Component {
       week
     }
 
-    const result = await userService.submitExercises(submission)
+    const result = await userService.submitExercises(submission, this.props.course)
     this.props.submission(result)
     this.props.setNotification(`exercises for part ${week} submitted`)
     setTimeout(() => {
@@ -179,7 +179,10 @@ const mapStateToProps = (state) => {
       username: null
     }
   }
-  const [max] = state.user.submissions.length>0 ? state.user.submissions.map(s=>s.week).sort((a,b)=>b-a) : [-1]
+
+  const submissionForCourse = state.user.submissions.filter(s => s.courseName === state.course.info.name)
+
+  const [ max ] = submissionForCourse.length > 0 ? submissionForCourse.map(s=>s.week).sort((a,b)=>b-a) : [-1]
   const week = state.course.info.week
   let part = max+1
   if (part<week) {
@@ -188,7 +191,8 @@ const mapStateToProps = (state) => {
 
   return {
     exerciseCount: state.course.info.exercises[part],
-    part
+    part,
+    course: state.course.info.name
   }
 }
 

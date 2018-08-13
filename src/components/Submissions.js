@@ -2,9 +2,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Table, Button } from 'semantic-ui-react'
 import SubmissionForm from './SubmissionForm'
+import courseService from '../services/course'
+import { initializeCourse } from '../reducers/course'
 const Highlight = require('react-syntax-highlight')
 
 class Submissions extends React.Component {
+
+  componentWillMount = async () => {
+    const info = await courseService.getInfoOf(this.props.course)
+    this.props.store.dispatch(initializeCourse(info))
+  }
 
   showModelSolutuions = (part) => () => {
     this.props.history.push(`solutions/${part}`)
@@ -84,7 +91,9 @@ class Submissions extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    submissions: state.user ? state.user.submissions : []
+    submissions: state.user && state.course.info  ? 
+      state.user.submissions.filter(s => s.courseName === state.course.info.name) : 
+      []
   }
 }
 

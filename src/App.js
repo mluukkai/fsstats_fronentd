@@ -1,7 +1,6 @@
 import React from 'react'
 import { Menu, Container, Header, Button, Message } from 'semantic-ui-react'
 import Login from './components/Login'
-import Statistics from './components/Statistics'
 import Notification from './components/Notification'
 import courseService from './services/course'
 import userService from './services/user'
@@ -10,6 +9,8 @@ import { setLoginError, clearNotification, setNotification } from './reducers/no
 import { login, logout } from './reducers/user'
 import { Route } from 'react-router-dom'
 import Submissions from './components/Submissions'
+import Course from './components/Course'
+import Courses from './components/Courses'
 import Solutions from './components/Solutions'
 
 class App extends React.Component {
@@ -22,19 +23,10 @@ class App extends React.Component {
   }
 
   componentWillMount = async () => {
-    const info = await courseService.getInfo()
-    const action = initializeCourse(info)
-    this.props.store.dispatch(action)
-
-    const stats = await courseService.getStats()
-    const action2 = initializeStats(stats)
-    this.props.store.dispatch(action2)
-
     const userJson = localStorage.getItem('currentFSUser')
     if (userJson) {
       const userData = await userService.getSubmissions()
-      const action = login(userData)
-      this.props.store.dispatch(action)
+      this.props.store.dispatch(login(userData))
     }
   }
     
@@ -45,10 +37,11 @@ class App extends React.Component {
   }
 
   handleItemClick = (history) => (e, { name }) => {
+    const course = this.props.store.getState().course.info.name
     if (name === 'submissions') {
-      history.push('/submissions')
+      history.push(`/${course}/submissions`)
     } else {
-      history.push('/')
+      history.push(`/${course}`)
     }
     
     this.setState({ activeItem: name })
@@ -109,21 +102,16 @@ class App extends React.Component {
       </Container>
     }
 
-    if (this.props.store.getState().course.info === null ) {
-      return null
-    }
-
     const name = this.props.store.getState().user ? 
       `${this.props.store.getState().user.first_names} ${this.props.store.getState().user.last_name }` : 
     ''
 
     const { activeItem } = this.state
-    const course = this.props.store.getState().course.info
 
     return (
       <Container>
 
-        <Route path="/" render={({history}) => (
+        <Route path="/" render={({ history, match }) => (
 
           <Menu>
             <Menu.Item 
@@ -176,20 +164,16 @@ class App extends React.Component {
 
         <Notification />
 
-        <Route exact path="/" render={() => (
-          <div>
-            <h2>{course.name}</h2>
-            <p><a href={course.url}>course page</a></p>
-            <Statistics />  
-          </div>
-        )} />
-
-        <Route exact path="/submissions" render={({history}) => 
-          <Submissions history={history}/> }
+        <Route exact path="/" render={({ history }) =>
+          <Courses historyy={history} /> }
         />
 
-        <Route path="/solutions/:id" render={({match}) => 
-          <Solutions id={match.params.id} />}
+        <Route exact path="/:course" render={({ history, match }) =>
+          <Course history={history} course={match.params.course} store={this.props.store} />}
+        />
+
+        <Route exact path="/:course/submissions" render={({ history, match }) =>
+          <Submissions history={history} course={match.params.course} store={this.props.store} />}
         />
 
         <Login

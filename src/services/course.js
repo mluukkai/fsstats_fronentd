@@ -10,9 +10,29 @@ const getInfo = async () => {
   }
 }
 
-const getStats = async () => {
+const getInfoOf = async (name) => {
   try {
-    const url = `${BASEURL}/stats`
+    const url = `${BASEURL}/${name}/info`
+    const result = await axios.get(url)
+    return result.data
+  } catch (ex) {
+    console.log(ex)
+  }
+}
+
+const getStatsOf = async (name) => {
+  try {
+    const url = `${BASEURL}/${name}/stats`
+    const result = await axios.get(url)
+    return result.data
+  } catch (ex) {
+    console.log(ex)
+  }
+}
+
+const getCourses = async () => {
+  try {
+    const url = `${BASEURL}/courses`
     const result = await axios.get(url)
     return result.data
   } catch (ex) {
@@ -48,5 +68,5 @@ const getFile = async (url) => {
 }
 
 export default {
-  getInfo, getStats, getSolutions, getFile
+  getStatsOf, getSolutions, getFile, getInfoOf, getCourses
 }
