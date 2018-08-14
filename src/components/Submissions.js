@@ -19,7 +19,7 @@ class Submissions extends React.Component {
 
   render() {
 
-    if (this.props.submissions.length===0) {
+    if (this.props.submissions.length === 0) {
       return (
         <div>
           <SubmissionForm />
@@ -27,7 +27,7 @@ class Submissions extends React.Component {
       )
     }
 
-    const byPart = (p1, p2) => p1.week-p2.week
+    const byPart = (p1, p2) => p1.week - p2.week
 
     const solutions = (part) => {
       if ( part===0) {

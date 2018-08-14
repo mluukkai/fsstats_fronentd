@@ -40,9 +40,9 @@ const getCourses = async () => {
   }
 }
 
-const getSolutions = async (id) => {
+const getSolutions = async (course, id) => {
   try {
-    const url = `${BASEURL}/solution_files/${id}`
+    const url = `${BASEURL}/${course}/solution_files/${id}`
     const result = await axios.get(url)
     return result.data
   } catch (ex) {

@@ -88,6 +88,12 @@ class App extends React.Component {
     return !(this.props.store.getState().user === null)
   }
 
+  loggedInCourse() {
+    const url = document.location.href
+    const h = url.indexOf('#')
+    return h != -1 && url.substring(h).length>2 && !(this.props.store.getState().user === null)
+  }
+
   render() {
     if (this.state.error) {
       return <Container style={{margin: 10}}>
@@ -122,7 +128,7 @@ class App extends React.Component {
               course stats
           </Menu.Item>
 
-            {this.loggedIn() &&
+            {this.loggedInCourse() &&
               <Menu.Item
                 name='submissions'
                 active={activeItem === 'submissions'}
@@ -174,6 +180,10 @@ class App extends React.Component {
 
         <Route exact path="/:course/submissions" render={({ history, match }) =>
           <Submissions history={history} course={match.params.course} store={this.props.store} />}
+        />
+        
+        <Route path="/:course/solutions/:id" render={({ match }) =>
+          <Solutions id={match.params.id} course={match.params.course} />}
         />
 
         <Login

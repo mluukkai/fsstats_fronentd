@@ -4,7 +4,6 @@ const initial = {
 }
 
 const reducer = (state = initial, action) => {
-  console.log(action)
   if (action.type === 'INITIALIZE_COURSE') {
     return Object.assign({}, state, {info: action.payload } )
   }

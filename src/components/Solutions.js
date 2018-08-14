@@ -53,12 +53,12 @@ class Solutions extends React.Component {
   }
 
   componentWillMount = async () => {
-    const files = await courseService.getSolutions(this.props.id)
-    this.setState({files})
+    const files = await courseService.getSolutions(this.props.course, this.props.id)
+    this.setState({ files })
   }
 
   componentWillReceiveProps = async (newProps) => {
-    const files = await courseService.getSolutions(newProps.id)
+    const files = await courseService.getSolutions(newProps.course, newProps.id)
     this.setState({ files })
   }
 
