@@ -74,8 +74,6 @@ class Solutions extends React.Component {
   }
 
   render(){
-    //console.log(this.state.content)
-
     const show = () => {
       if (this.state.content === 'image/png') {
         const user = JSON.parse(localStorage.getItem('currentFSUser'))
