@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Checkbox, Button, Message } from 'semantic-ui-react'
+import { Form, Input, Checkbox, Button, Message, Segment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import userService from '../services/user'
 import { setNotification, clearNotification, setError } from '../reducers/notification'
@@ -15,7 +15,8 @@ class SubmissionForm extends React.Component {
       hours: '',
       github: 'https://github.com/username/repo',
       comments: '',
-      visible: false
+      visible: false,
+      plagiarism: false
     }
 
     for (let i = 1; i <= 40; i++) {
@@ -105,6 +106,26 @@ class SubmissionForm extends React.Component {
       )
     }
     
+    if (this.state.visible && this.state.plagiarism === false) {
+      return (
+        <Segment>
+          <p>
+            Kurssilla seurataan Helsingin yliopiston opintokäytäntöjä. Plagiarismi ja opintovilppi, eli esimerkiksi netissä olevien tai kaverilta saatujen vastausten kopiointi ja niiden palauttaminen omana työnä on kiellettyä.
+          </p>
+          <p>
+            Todettu opintovilppi johtaa kurssisuorituksen hylkäämiseen ja toistuva opintovilppi voi johtaa opinto-oikeuden määräaikaiseen menettämiseen.
+            Lue lisää osoitteesta <a href='http://blogs.helsinki.fi/alakopsaa/opiskelijalle/'>http://blogs.helsinki.fi/alakopsaa/opiskelijalle/</a>
+          </p>
+
+          <Form>
+            <Form.Field>
+              <Checkbox onClick={() => this.setState({ plagiarism: true })} label='Olen lukenut ja ymmärtänyt ylläolevan opintovilppiin liittyvän tekstin ja tiedän opintovilpin seuraukset. En aio esittää muiden vastauksia omina vastauksinani.' />
+            </Form.Field>
+          </Form>
+        </Segment>
+      )
+    }   
+
     const exercises = () => {
       const c = []
       for (let i = 1; i <= this.props.exerciseCount; i++) { c.push(i) }

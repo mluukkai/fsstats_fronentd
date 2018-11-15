@@ -19,7 +19,7 @@ class Submissions extends React.Component {
 
   render() {
 
-    if (this.props.submissions.length === 0) {
+    if (this.props.submissions.length === 0 && this.props.week===1) {
       return (
         <div>
           <SubmissionForm />
@@ -39,11 +39,27 @@ class Submissions extends React.Component {
         </Button>
       )
     }
+
     const sum = (s,i) => s+i
     const exerciseTotal = 
       this.props.submissions.map(s => s.exercises.length).reduce(sum, 0)
     const hoursTotal = 
       this.props.submissions.map(s => s.time).reduce(sum, 0)
+
+    const submissionForWeeks = this.props.submissions.map(s => s.week)
+    const maxWeek = Math.max(submissionForWeeks, this.props.week-1)    
+    const submissions = this.props.submissions
+
+    for (let week = 1; week <= maxWeek; week++) {
+      if (!submissionForWeeks.includes(week)) {
+        submissions.push({
+          week,
+          _id: week,
+          exercises: []
+        })
+      }
+    }
+
     return (
       <div>
         <h3>My submissions</h3>
@@ -60,7 +76,7 @@ class Submissions extends React.Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {this.props.submissions.sort(byPart).map(s=>(
+            {submissions.sort(byPart).map(s=>(
               <Table.Row key={s._id}>
                 <Table.Cell>{s.week}</Table.Cell>
                 <Table.Cell>{s.exercises.length}</Table.Cell>
@@ -93,7 +109,8 @@ const mapStateToProps = (state) => {
   return {
     submissions: state.user && state.course.info  ? 
       state.user.submissions.filter(s => s.courseName === state.course.info.name) : 
-      []
+      [],
+    week: state.course.info ? state.course.info.week : 0
   }
 }
 

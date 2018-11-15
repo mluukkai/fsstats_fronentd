@@ -3,7 +3,6 @@ import { Message } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 const Notification = (props) => {
-  console.log(props)
   if (props.notification===null) {
     return null
   }

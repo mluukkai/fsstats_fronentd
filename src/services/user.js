@@ -26,6 +26,16 @@ const submitExercises = async (exercises, course) => {
   return response.data
 }
 
+const createMiniproject = async (exercises, course) => {
+  const user = JSON.parse(localStorage.getItem('currentFSUser'))
+  const config = {
+    headers: { 'x-access-token': user.token }
+  }
+
+  const response = await axios.post(`${BASEURL}/${course}/projects`, project, config)
+  return response.data
+}
+
 export default {
-  login, getSubmissions, submitExercises
+  login, getSubmissions, submitExercises, createMiniproject
 }

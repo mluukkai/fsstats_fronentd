@@ -5,6 +5,8 @@ const reducer = (state = null, action) => {
     return null
   } else if (action.type === 'SUBMISSION') {
     return action.payload
+  } else if (action.type === 'PROJECT') {
+    return action.payload
   }
 
   return state
@@ -13,6 +15,13 @@ const reducer = (state = null, action) => {
 export const login = (user) => {
   return {
     type: 'LOGIN',
+    payload: user
+  }
+}
+
+export const setProject = (user) => {
+  return {
+    type: 'PROJECT',
     payload: user
   }
 }

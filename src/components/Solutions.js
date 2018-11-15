@@ -11,12 +11,15 @@ const File = ({ file, showFile }) => {
     showFile(file)
   }
 
+  const handleDot = name =>
+    name === '_travis.yml' ? '.travis.yml' : name
+
   if (file.type === 'file') {
     return (
       <List.Item onClick={klik(file)}>
         <List.Icon name='file' />
         <List.Content>
-          <List.Description>{file.name}</List.Description>
+          <List.Description>{handleDot(file.name)}</List.Description>
         </List.Content>
       </List.Item>  
     )
@@ -124,7 +127,7 @@ class Solutions extends React.Component {
                   </Message.Header>
                   <p>{this.state.error}</p>  
                 </Message>)}
-              <h4>{this.state.file &&  this.state.file.fullName}</h4>
+              <h4>{this.state.file && this.state.file.fullName}</h4>
               {show()}
             </Grid.Column>
           </Grid.Row>

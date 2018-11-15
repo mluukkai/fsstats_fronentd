@@ -16,11 +16,15 @@ class Courses extends React.Component {
   render() {
     return (
       <div>
-        {this.state.courses.filter(c=>c.enabled===true).map(c=>
-          <a href={`#${c.name}`}>
-            {c.fullName}
-          </a>
-        )}
+        <ul>
+          {this.state.courses.filter(c=>c.enabled===true).map(c=>
+            <li>
+              <a href={`#${c.name}`}>
+                {c.fullName}
+              </a>
+            </li>
+          )}
+        </ul>
       </div>
     )
   }
