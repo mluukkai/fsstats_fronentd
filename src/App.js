@@ -174,7 +174,7 @@ class App extends React.Component {
     const { activeItem } = this.state
 
     const instructor = () =>  {
-      return this.props.store.getState().user && ['laatopi', 'mluukkai', 'kalleilv', ''].includes(this.props.store.getState().user.student_number)
+      return this.props.store.getState().user && ['laatopi', 'mluukkai', 'kalleilv', ''].includes(this.props.store.getState().user.username)
     }
 
 

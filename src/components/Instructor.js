@@ -290,6 +290,7 @@ class Project extends React.Component {
 
     return (
       <div style={style}>
+        <div class='ui divider' />
         <h4>{project.name}</h4>
         <div style={smallPadding}>
           <em><strong>id</strong> {project._id}</em>
@@ -314,8 +315,7 @@ class Project extends React.Component {
             )}
           </ul>
         </div>
-        <PeerReviewStats project={project} />
-
+        <PeerReviewStats project={project} />    
       </div>
     )
   }
@@ -446,7 +446,8 @@ class Instructor extends React.Component {
         <div>
           show only own projects <input type='checkbox' onChange={this.check}></input>
         </div>
-        {projects.map(p => <Project
+        {projects.map(p => 
+        <Project
           key={p._id}
           project={p}
           setTime={this.setTime}
