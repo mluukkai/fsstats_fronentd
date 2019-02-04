@@ -31,7 +31,7 @@ class Submissions extends React.Component {
 
     const solutions = (part) => {
       if ( part===0) {
-        return <div>not available yet</div>
+        return <div>not available</div>
       }
       return(
         <Button onClick={this.showModelSolutuions(part)}>
@@ -40,15 +40,45 @@ class Submissions extends React.Component {
       )
     }
 
-    const sum = (s,i) => s+i
-    const exerciseTotal = 
-      this.props.submissions.map(s => s.exercises.length).reduce(sum, 0)
-    const hoursTotal = 
-      this.props.submissions.map(s => s.time).reduce(sum, 0)
-
-    const submissionForWeeks = this.props.submissions.map(s => s.week)
     const maxWeek = Math.max(submissionForWeeks, this.props.week-1)    
-    const submissions = this.props.submissions
+    let submissions = this.props.submissions
+    const user = this.props.store.getState().user
+
+    if (!user) return null
+
+    const extension = user.extensions && user.extensions.find(e => e.to === this.props.course)
+
+    if ( extension ) {
+      submissions = []
+      const extendSubmissions = extension.extendsWith
+      const to = Math.max(...extendSubmissions.map(s => s.part), ...submissions.map(s => s.week))
+      for (let index = 0; index <= to ; index++) {
+        const ext = extendSubmissions.find(s => s.part === index)
+        const sub = this.props.submissions.find(s => s.week === index)
+        if (ext && (!sub || ext.exercises > sub.exercises)) {
+          const exercises = []
+          for (let i = 0; i < ext.exercises ; i++) {
+            exercises.push(i)       
+          }
+          submissions.push({
+            exercises,
+            comment: `credited from ${extension.from}`,
+            week: index,
+            _id: index
+          })
+        } else {
+          submissions.push(sub)
+        }
+      }
+    }
+
+    const submissionForWeeks = submissions.map(s => s.week)
+
+    const sum = (s, i) => s + i
+    const exerciseTotal =
+      submissions.map(s => s.exercises.length).reduce(sum, 0)
+    const hoursTotal =
+      this.props.submissions.map(s => s.time).reduce(sum, 0)
 
     for (let week = 1; week <= maxWeek; week++) {
       if (!submissionForWeeks.includes(week)) {

@@ -203,10 +203,14 @@ const mapStateToProps = (state) => {
 
   const submissionForCourse = state.user.submissions.filter(s => s.courseName === state.course.info.name)
 
-  const [ max ] = submissionForCourse.length > 0 ? submissionForCourse.map(s=>s.week).sort((a,b)=>b-a) : [-1]
+  const extensionForCourse = state.user.extensions ? state.user.extensions.find(e => e.to === state.course.info.name) : null
+  const extendSubmissions = extensionForCourse ? extensionForCourse.extendsWith : []
+
+  const max = Math.max(-1, ...submissionForCourse.map(s => s.week), ...extendSubmissions.map(s => s.part))
+
   const week = state.course.info.week
-  let part = max+1
-  if (part<week) {
+  let part = max + 1
+  if (part < week) {
     part = week
   }
 

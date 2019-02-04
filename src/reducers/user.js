@@ -7,6 +7,8 @@ const reducer = (state = null, action) => {
     return action.payload
   } else if (action.type === 'PROJECT') {
     return action.payload
+  } else if (action.type === 'REVIEW') {
+    return action.payload
   }
 
   return state
@@ -25,6 +27,15 @@ export const setProject = (user) => {
     payload: user
   }
 }
+
+export const setPeerReview = (user) => {
+  return {
+    type: 'REVIEW',
+    payload: user
+  }
+}
+
+
 
 export const submission = (data) => {
   return {

@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Message } from 'semantic-ui-react'
 import courseService from '../services/course'
 import { initializeCourse } from '../reducers/course'
+import PeerReview from './PeerReview'
 import { connect } from 'react-redux'
 
 class Miniproject extends React.Component {
@@ -237,31 +238,22 @@ class Miniproject extends React.Component {
         return null
       }
 
-      /*
-      return <PeerReview
-        users={this.props.user.project.users}
-        createPeerReview={this.props.createPeerReview}
-      />
-      */
-      return null
-    }
-
-    if (true) {
       return (
-        <div>
-          {form()}
-          {project()}
-        </div>  
+        <div style={{paddingTop: 10}}>
+          <PeerReview
+            users={this.props.user.project.users}
+            createPeerReview={this.props.createPeerReview}
+          />
+        </div>
       )
     }
 
     return (
       <div>
-        {flash()}
         {form()}
         {project()}
         {review()}
-      </div>
+      </div>  
     )
   }
 }

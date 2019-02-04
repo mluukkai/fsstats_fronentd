@@ -7,15 +7,15 @@ import courseService from './services/course'
 import userService from './services/user'
 import { initializeCourse, initializeStats } from './reducers/course'
 import { setLoginError, clearNotification, setNotification } from './reducers/notification'
-import { login, logout, setProject } from './reducers/user'
+import { login, logout, setProject, setPeerReview } from './reducers/user'
 import { Route } from 'react-router-dom'
 import Submissions from './components/Submissions'
 import Course from './components/Course'
 import Courses from './components/Courses'
 import Solutions from './components/Solutions'
+import Crediting from './components/Crediting'
 import Miniproject from './components/Miniproject'
 import axios from 'axios'
-
 class App extends React.Component {
   constructor() {
     super()
@@ -45,6 +45,8 @@ class App extends React.Component {
       history.push(`/${course}/submissions`)
     } else if (name === 'miniproject') {
       history.push(`/${course}/miniproject`)
+    } else if (name === 'crediting') {
+      history.push(`/${course}/crediting`)      
     } else if (name === 'instructor') {
       history.push(`/${course}/instructor`)  
     } else {
@@ -98,12 +100,23 @@ class App extends React.Component {
   loggedInCourse() {
     const url = document.location.href
     const h = url.indexOf('#')
-    return h != -1 && url.substring(h).length>2 && !(this.props.store.getState().user === null)
+    return h != -1 && url.substring(h).length > 2 && !(this.props.store.getState().user === null)
   }
 
   miniprojectEnabled() {
     const course = this.props.store.getState().course.info
     return course && course.miniproject
+  }
+
+  creditingEnabled() {
+    const course = this.props.store.getState().course.info
+    return course && course.extension
+  }
+  
+  toggledUser() {
+    if (!this.props.store.getState().user) return false
+    const username = this.props.store.getState().user.username
+    return ['mluukkai', 'testertester', 'vvvirola', 'laitilat', 'vpekkine'].includes(username)
   }
 
   joinProject = (id) => {
@@ -125,6 +138,34 @@ class App extends React.Component {
         setTimeout(() => {
           this.props.store.dispatch(clearNotification())
         }, 8000)  
+      })
+  }
+
+  createCrediting = (crediting) => {
+    crediting.user = this.props.store.getState().user
+
+    const user = JSON.parse(localStorage.getItem('currentFSUser'))
+    const config = {
+      headers: { 'x-access-token': user.token }
+    }
+
+    const course = this.props.store.getState().course.info.name
+    axios.post(`${BASEURL}/${course}/users/${crediting.user.username}/extensions`, crediting, config)
+      .then(response => {
+
+        console.log(response.data.extensions)
+
+        const user = Object.assign({}, this.props.store.getState().user, { extensions: response.data.extensions })
+        this.props.store.dispatch(setProject(user))
+        this.props.store.dispatch(setNotification('crediting done!'))
+        setTimeout(() => {
+          this.props.store.dispatch(clearNotification())
+        }, 8000)
+      }).catch(error => {
+        this.props.store.dispatch(setNotification(error.response.data.error))
+        setTimeout(() => {
+          this.props.store.dispatch(clearNotification())
+        }, 8000)
       })
   }
 
@@ -153,6 +194,27 @@ class App extends React.Component {
       })
   }
 
+  createPeerReview =(answers) => {
+    const user = JSON.parse(localStorage.getItem('currentFSUser'))
+    const config = {
+      headers: { 'x-access-token': user.token }
+    }
+
+    axios.post(`${BASEURL}/users/${user.username}/peer_review`, answers, config)
+      .then(response => {
+        const user = Object.assign({}, this.props.store.getState().user, { peerReview: response.data })
+        this.props.store.dispatch(setPeerReview(user))
+        this.props.store.dispatch(setNotification('peer review created'))
+        setTimeout(() => {
+          this.props.store.dispatch(clearNotification())
+        }, 8000)    
+
+
+      }).catch(response => {
+        console.log(response)
+      })
+  }
+
   render() {
     if (this.state.error) {
       return <Container style={{margin: 10}}>
@@ -174,9 +236,8 @@ class App extends React.Component {
     const { activeItem } = this.state
 
     const instructor = () =>  {
-      return this.props.store.getState().user && ['laatopi', 'mluukkai', 'kalleilv', ''].includes(this.props.store.getState().user.username)
+      return this.props.store.getState().user && ['laatopi', 'mluukkai', 'kalleilv', 'nikoniko'].includes(this.props.store.getState().user.username)
     }
-
 
     return (
       <Container>
@@ -199,6 +260,16 @@ class App extends React.Component {
                 onClick={this.handleItemClick(history)}
               >
                 my submissions
+            </Menu.Item>
+            }
+
+            {this.loggedInCourse() && this.creditingEnabled() &&
+              <Menu.Item
+                name='crediting'
+                active={activeItem === 'crediting'}
+                onClick={this.handleItemClick(history)}
+              >
+                crediting
             </Menu.Item>
             }
 
@@ -263,9 +334,22 @@ class App extends React.Component {
         />
 
         <Route exact path="/:course/submissions" render={({ history, match }) =>
-          <Submissions history={history} course={match.params.course} store={this.props.store} />}
+          <Submissions history={history}
+            course={match.params.course}
+            store={this.props.store}
+          />}
         />
         
+        <Route exact path="/:course/crediting" render={({ history, match }) =>
+          <Crediting
+            history={history}
+            course={match.params.course}
+            store={this.props.store}
+            createCrediting={this.createCrediting}
+            user={this.props.store.getState().user}
+          />}
+        />
+
         <Route path="/:course/solutions/:id" render={({ match }) =>
           <Solutions id={match.params.id} course={match.params.course} />}
         />

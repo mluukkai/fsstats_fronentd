@@ -185,7 +185,7 @@ class Project extends React.Component {
     const { project } = this.props
 
     const instructor = () => {
-      const options = ['laatopi', 'mluukkai', 'kalleilv', '']
+      const options = ['laatopi', 'mluukkai', 'kalleilv', 'nikoniko']
       const buttonStyle = {
         display: this.state.instructorFormVisible ? 'none' : ''
       }
