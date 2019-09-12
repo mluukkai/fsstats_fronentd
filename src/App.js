@@ -152,9 +152,7 @@ class App extends React.Component {
     const course = this.props.store.getState().course.info.name
     axios.post(`${BASEURL}/${course}/users/${crediting.user.username}/extensions`, crediting, config)
       .then(response => {
-
         console.log(response.data.extensions)
-
         const user = Object.assign({}, this.props.store.getState().user, { extensions: response.data.extensions })
         this.props.store.dispatch(setProject(user))
         this.props.store.dispatch(setNotification('crediting done!'))

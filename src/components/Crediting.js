@@ -38,12 +38,12 @@ class Crediting extends React.Component{
 
   formValid() {
     const valid = this.state.github.length > 2 &&
+      !this.state.github.includes('/') &&
       this.state.from.length > 1 &&
       this.state.to.length > 0
 
     return valid
   }   
-
 
   render() {
     if (!this.props.user) {
@@ -112,6 +112,11 @@ class Crediting extends React.Component{
     return (
       <div>
         <h2>Crediting a previous course (hyväksiluku)</h2>
+        <p>Täytä allaoleva lomake ainoastaan, jos aiot tällä kurssilla täydentää aiempaa kurssisuoritustasi.</p>
+
+        <p>
+          Hyväksiluvusta lisää <a href='https://fullstack-hy2019.github.io/osa0/yleista#aiemmin-suoritetun-kurssin-taydentaminen'>kurssisivulta</a>.
+        </p>
         <Form onSubmit={this.handleSubmit}>
           <Form.Field inline>
             <label>From course</label>

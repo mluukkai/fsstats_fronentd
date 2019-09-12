@@ -51,7 +51,7 @@ class Submissions extends React.Component {
     if ( extension ) {
       submissions = []
       const extendSubmissions = extension.extendsWith
-      const to = Math.max(...extendSubmissions.map(s => s.part), ...submissions.map(s => s.week))
+      const to = Math.max(...extendSubmissions.map(s => s.part), ...this.props.submissions.map(s => s.week))
       for (let index = 0; index <= to ; index++) {
         const ext = extendSubmissions.find(s => s.part === index)
         const sub = this.props.submissions.find(s => s.week === index)
@@ -66,8 +66,10 @@ class Submissions extends React.Component {
             week: index,
             _id: index
           })
-        } else {
+        } else if (sub) {
           submissions.push(sub)
+        } else {
+          submissions.push({ week: index, exercises: [], _id: index, comment: 'no submission' })
         }
       }
     }
